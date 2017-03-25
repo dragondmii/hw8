@@ -41,11 +41,19 @@ HIST_INDEX = {}
 
 def hist_index_img(imgp, color_space, bin_size=8):
   global HIST_INDEX
-  ## your code
+
+  
+
+
+  cv2.calcHist(cv2.open(imgp), channels, mask, histSize, ranges)
+
+
   pass
 
 def hist_index_img_dir(imgdir, color_space, bin_size):
-  # generator to run hist_index_img(image, color_space, bin_size)
+  for path, dirlist, filelist in os.walk(roordir):
+    for file_name in fnmatch.filter(filelist, r'.+/.(jpg|png|JPG)'):
+     yield hist_index_img(os.path.join(path, file_name),color_space, bin_size)
   pass
 
 if __name__ == '__main__':
