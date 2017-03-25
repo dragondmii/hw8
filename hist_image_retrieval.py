@@ -6,6 +6,7 @@ import sys
 import os
 import cPickle as pickle
 from matplotlib import pyplot as plt
+#import matplotlib.pyplot
 from os.path import basename
 
 ################################
@@ -33,9 +34,9 @@ args = vars(ap.parse_args())
 inimg = cv2.imread(args['imgpath'])
 bin_size = int(args['bin'])
 # compute the histogram of inimg and save it in inhist
-inhist = None
+inhist = cv2.calcHist([inimg],[0,1,2], None, [bin_size,bin_size,bin_size],[0,256,0,256,0,256]
 # normalize and flatten the inhist into a feature vector
-inhist_vec = None
+inhist_vec = cv2.normalize(inhist,inhist).flatten()
 
 # get the similarity metric string from the command line parameter.
 hist_sim = args['sim']
@@ -44,18 +45,22 @@ HIST_INDEX = None
 
 def hist_correl_sim(norm_hist1, norm_hist2):
   # compute correlation similarity b/w normalized and flattened histograms
+  x = cv2.compareHist(norm_hist1, norm_hist2, cv2.HISTCMP_CORREL)
   pass
 
 def hist_chisqr_sim(norm_hist1, norm_hist2):
   # compute chi square similarity b/w normalized and flattened histograms
+  x = cv2.compareHist(norm_hist1, norm_hist2, cv2.HISTCMP_CHISQR)
   pass
 
 def hist_intersect_sim(norm_hist1, norm_hist2):
   # compute intersection similarity b/w normalized and flattened histograms
+  x = cv2.compareHist(norm_hist1, norm_hist2, cv2.HISTCMP_INTERSECT)
   pass
 
 def hist_bhatta_sim(norm_hist1, norm_hist2):
   # compute bhattacharyya similarity b/w normalized and flattened histograms
+  x = cv2.compareHist(norm_hist1, norm_hist2, cv2.HISTCMP_BHATTACHARYYA)
   pass
 
 # compute the topn matches using the value saved in hist_sim above.
