@@ -83,7 +83,26 @@ def mass_build():
   with open(rgb_hist8.pck, 'wb') as histpick:
     pickle.dump(HIST_INDEX, histpick)
   print('indexing finished')
-  
+
+  HIST_INDEX.clear()
+  hist_index_img_dir(imgdir, clr_val, 16))
+  with open(rgb_hist16.pck, 'wb') as histpick:
+    pickle.dump(HIST_INDEX, histpick)
+  print('indexing finished')
+
+  clr_val = hsv
+
+  HIST_INDEX.clear()
+  hist_index_img_dir(imgdir, clr_val, 8))
+  with open(hsv_hist8.pck, 'wb') as histpick:
+    pickle.dump(HIST_INDEX, histpick)
+  print('indexing finished')
+
+  HIST_INDEX.clear()  
+  hist_index_img_dir(imgdir, clr_val, 16))
+  with open(hsv_hist16.pck, 'wb') as histpick:
+    pickle.dump(HIST_INDEX, histpick)
+  print('indexing finished')
 
 
 
