@@ -55,20 +55,36 @@ def hist_index_img(imgp, color_space, bin_size=8):
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     img_hist = cv2.calcHist(hsv,[0,1,2],None, bin_size_list, [0,180,0,256,0,256])
   
-  norm_hist = cv2.normalize(img_hist, img_hist)
-  print norm_hist, '\n'
-  norm_hist = norm.hist.flatten()
-  print norm_hist, '\n'
+  norm_hist = cv2.normalize(img_hist, img_hist).flatten()
+#  print norm_hist, '\n'
   HIST_INDEX[imgp]=norm_hist
   print str(imgp)
 #  print(HIST_INDEX[imgp]), '\n'
   pass
 
 def hist_index_img_dir(imgdir, color_space, bin_size):
+  for imgp in gen_imgp(imgdir):
+    hist_index_img(imgp, color_space, bin_size)
+  pass
+
+
+def gen_imgp(imgdir):
   for path, dirlist, filelist in os.walk(imgdir):
     for file_name in filelist:
-      hist_index_img(os.path.join(path, file_name),color_space, bin_size)
+      yield os.path.join(path, file_name)
   pass
+
+def mass_build():
+  imgdir = 'images/'
+
+  clr_val = rgb
+
+  hist_index_img_dir(imgdir, clr_val, 8))
+  with open(rgb_hist8.pck, 'wb') as histpick:
+    pickle.dump(HIST_INDEX, histpick)
+  print('indexing finished')
+  
+
 
 
 if __name__ == '__main__':
@@ -76,6 +92,17 @@ if __name__ == '__main__':
   with open(args['hist'], 'wb') as histpick:
     pickle.dump(HIST_INDEX, histpick)
   print('indexing finished')
+
+
+
+
+
+
+
+
+
+
+
 
 #  image = cv2.imread('car_test/img12.png')
 #  rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
