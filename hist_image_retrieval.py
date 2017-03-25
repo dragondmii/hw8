@@ -10,7 +10,7 @@ from os.path import basename
 
 ################################
 # module: hist_image_retrieval.py
-# author:  your name and A-Number
+# author:  Robert Epstein and A01092594
 # description: persistent image retriever
 # to run:
 # $ python hist_image_retrieval.py -ip horfood_test/img01.JPG -hist hsv_hist16.pck -bin 16 -sim bhatta

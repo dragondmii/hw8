@@ -49,19 +49,17 @@ def hist_index_img(imgp, color_space, bin_size=8):
 
   if color_space == 'rgb':
     rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    input_hist = cv2.calcHist(rgb,[0,1,2],None, bin_size_list, [0,265,0,256,0,256])
+    img_hist = cv2.calcHist([rgb],[0,1,2],None, bin_size_list, [0,256,0,256,0,256])
   
   if color_space == 'hsv':
     print 'hsv'
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    input_hist = cv2.calcHist(hsv,[0,1,2],None, bin_size_list, [0,265,0,256,0,256])
+    img_hist = cv2.calcHist(hsv,[0,1,2],None, bin_size_list, [0,256,0,256,0,256])
   
-  output_hist = input_hist
-
-  cv2.normalize(input_hist, output_hist).flatten()
-  HIST_INDEX[imgp]=output_hist
+  norm_hist = cv2.normalize(img_hist, img_hist).flatten()
+  HIST_INDEX[imgp]=norm_hist
   print str(imgp)
-
+#  print(HIST_INDEX[imgp]), '\n'
   pass
 
 def hist_index_img_dir(imgdir, color_space, bin_size):
@@ -76,3 +74,6 @@ if __name__ == '__main__':
   with open(args['hist'], 'wb') as histpick:
     pickle.dump(HIST_INDEX, histpick)
   print('indexing finished')
+  image = cv2.imread('car_test/img12.png')
+  cv2.imshow('image',image)
+  cv2.waitKey(0)
