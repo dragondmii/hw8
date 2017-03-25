@@ -5,6 +5,7 @@ import cv2
 import sys
 import os
 import re
+import fnmatch
 import cPickle as pickle
 
 ################################
@@ -42,7 +43,7 @@ HIST_INDEX = {}
 def hist_index_img(imgp, color_space, bin_size=8):
   global HIST_INDEX
 
-  image = cv2.open(imgp)
+  image = cv2.imread(imgp)
   
   bin_size_list = [bin_size,bin_size,bin_size]
 
@@ -51,8 +52,11 @@ def hist_index_img(imgp, color_space, bin_size=8):
     input_hist = cv2.calcHist(rgb,[0,1,2],None, bin_size_list, [0,265,0,256,0,256])
   
   if color_space == 'hsv':
+    print 'hsv'
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     input_hist = cv2.calcHist(hsv,[0,1,2],None, bin_size_list, [0,265,0,256,0,256])
+  
+  output_hist = input_hist
 
   cv2.normalize(input_hist, output_hist).flatten()
   HIST_INDEX[imgp]=output_hist
@@ -61,18 +65,14 @@ def hist_index_img(imgp, color_space, bin_size=8):
   pass
 
 def hist_index_img_dir(imgdir, color_space, bin_size):
-  print 'test'
   for path, dirlist, filelist in os.walk(imgdir):
-    print imgdir, color_space, bin_size
-    for file_name in fnmatch.filter(filelist, r'.+/.(jpg|png|JPG)'):
-     print str(os.path.join(path,file_name)),color_space,bin_size
-     yield hist_index_img(os.path.join(path, file_name),color_space, bin_size)
+    for file_name in filelist:
+      hist_index_img(os.path.join(path, file_name),color_space, bin_size)
   pass
+
 
 if __name__ == '__main__':
   hist_index_img_dir(args['imgdir'], args['clr'], int(args['bin']))
   with open(args['hist'], 'wb') as histpick:
     pickle.dump(HIST_INDEX, histpick)
   print('indexing finished')
-  print(HIST_INDEX)
-
