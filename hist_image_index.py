@@ -48,14 +48,15 @@ def hist_index_img(imgp, color_space, bin_size=8):
   bin_size_list = [bin_size,bin_size,bin_size]
 
   if color_space == 'rgb':
-    rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    img_hist = cv2.calcHist([rgb],[0,1,2],None, bin_size_list, [0,256,0,256,0,256])
+#    rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    img_hist = cv2.calcHist([image],[0,1,2],None, bin_size_list, [0,256,0,256,0,256])
   
   if color_space == 'hsv':
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     img_hist = cv2.calcHist(hsv,[0,1,2],None, bin_size_list, [0,180,0,256,0,256])
   
   norm_hist = cv2.normalize(img_hist, img_hist).flatten()
+#  print norm_hist, '\n'
   HIST_INDEX[imgp]=norm_hist
   print str(imgp)
 #  print(HIST_INDEX[imgp]), '\n'
