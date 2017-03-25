@@ -42,10 +42,22 @@ HIST_INDEX = {}
 def hist_index_img(imgp, color_space, bin_size=8):
   global HIST_INDEX
 
+  image = cv2.open(imgp)
   
+  bin_size_list = []
+  for x in xrange(bin_size+1):
+    bin_size_list.append(bin_size)
 
+  if color_space = rgb:
+    rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    input_hist = cv2.calcHist(cv2.open(imgp,[0,1,2],None, bin_size_list, [0,265,0,256,0,256])
+  if color_space = hsv:
+    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    input_hist = cv2.calcHist(hsv,[0,1,2],None, bin_size_list, [0,265,0,256,0,256])
 
-  cv2.calcHist(cv2.open(imgp), channels, mask, histSize, ranges)
+  
+  cv2.normalize(input_hist, output_hist).flatten()
+  HIST_INDEX[imgp]=output_hist
 
 
   pass
