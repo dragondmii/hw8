@@ -32,10 +32,10 @@ from matplotlib import pyplot as plt
 ################################
 
 ap = argparse.ArgumentParser()
-ap.add_argument('-imgdir', '--imgdir', required = True, help = 'image directory')
-ap.add_argument('-hist', '--hist', required = True, help = 'histogram index file')
-ap.add_argument('-bin', '--bin', required=True, help='histogram bin size')
-ap.add_argument('-clr', '--clr', required=True, help='color space')
+ap.add_argument('-imgdir', '--imgdir', required = False, help = 'image directory')
+ap.add_argument('-hist', '--hist', required = False, help = 'histogram index file')
+ap.add_argument('-bin', '--bin', required=False, help='histogram bin size')
+ap.add_argument('-clr', '--clr', required=False, help='color space')
 args = vars(ap.parse_args())
 
 HIST_INDEX = {}
@@ -77,41 +77,43 @@ def gen_imgp(imgdir):
 def mass_build():
   imgdir = 'images/'
 
-  clr_val = rgb
+  clr_val = 'rgb'
 
-  hist_index_img_dir(imgdir, clr_val, 8))
-  with open(rgb_hist8.pck, 'wb') as histpick:
+  hist_index_img_dir(imgdir, clr_val, 8)
+  with open('rgb_hist8.pck', 'wb') as histpick:
     pickle.dump(HIST_INDEX, histpick)
-  print('indexing finished')
+  print('indexing finished-rgb8')
 
   HIST_INDEX.clear()
-  hist_index_img_dir(imgdir, clr_val, 16))
-  with open(rgb_hist16.pck, 'wb') as histpick:
+  hist_index_img_dir(imgdir, clr_val, 16)
+  with open('rgb_hist16.pck', 'wb') as histpick:
     pickle.dump(HIST_INDEX, histpick)
-  print('indexing finished')
+  print('indexing finished-rgb16')
 
-  clr_val = hsv
+  clr_val = 'hsv'
 
   HIST_INDEX.clear()
-  hist_index_img_dir(imgdir, clr_val, 8))
-  with open(hsv_hist8.pck, 'wb') as histpick:
+  hist_index_img_dir(imgdir, clr_val, 8)
+  with open('hsv_hist8.pck', 'wb') as histpick:
     pickle.dump(HIST_INDEX, histpick)
-  print('indexing finished')
+  print('indexing finished-hsv8')
 
   HIST_INDEX.clear()  
-  hist_index_img_dir(imgdir, clr_val, 16))
-  with open(hsv_hist16.pck, 'wb') as histpick:
+  hist_index_img_dir(imgdir, clr_val, 16)
+  with open('hsv_hist16.pck', 'wb') as histpick:
     pickle.dump(HIST_INDEX, histpick)
-  print('indexing finished')
+  print('indexing finished-hsv16')
 
 
 
 if __name__ == '__main__':
-  hist_index_img_dir(args['imgdir'], args['clr'], int(args['bin']))
-  with open(args['hist'], 'wb') as histpick:
-    pickle.dump(HIST_INDEX, histpick)
-  print('indexing finished')
+#  hist_index_img_dir(args['imgdir'], args['clr'], int(args['bin']))
+#  with open(args['hist'], 'wb') as histpick:
+#    pickle.dump(HIST_INDEX, histpick)
+#  print('indexing finished')
 
+  mass_build()
+  print ('shit got done')
 
 
 
