@@ -103,6 +103,7 @@ def show_images(input_image, match_list):
   holding = 2
   for impath, sim in match_list:
     img = cv2.imread(impath)
+    img = cv2..cvtColor(inimg, cv2.COLOR_BGR2RGB)
     fig = plt.figure(holding)
     fig.suptitle('Match: '+str(holding-1)+str(impath)+' : '+str(sim))
     plt.imshow(img)
