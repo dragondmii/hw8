@@ -91,11 +91,14 @@ def compute_hist_sim(inhist_vec, hist_index, topn=3):
   return_list = []
 
   for x in xrange(topn):
-    return_list.append(hist_sim_box[x]
+    return_list.append(hist_sim_box[x])
   return return_list
 
 def show_images(input_image, match_list):
-  
+  cv2.imshow('Input Image',input_image)                          
+  for x in xrange(len(match_list)):
+    cv.imshow(str(x), match_list[x])
+  cv2.waitKey(0)
 
   pass
  
