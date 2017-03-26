@@ -32,10 +32,10 @@ from matplotlib import pyplot as plt
 ################################
 
 ap = argparse.ArgumentParser()
-ap.add_argument('-imgdir', '--imgdir', required = False, help = 'image directory')
-ap.add_argument('-hist', '--hist', required = False, help = 'histogram index file')
-ap.add_argument('-bin', '--bin', required=False, help='histogram bin size')
-ap.add_argument('-clr', '--clr', required=False, help='color space')
+ap.add_argument('-imgdir', '--imgdir', required = True, help = 'image directory')
+ap.add_argument('-hist', '--hist', required = True, help = 'histogram index file')
+ap.add_argument('-bin', '--bin', required=True, help='histogram bin size')
+ap.add_argument('-clr', '--clr', required=True, help='color space')
 args = vars(ap.parse_args())
 
 HIST_INDEX = {}
@@ -48,8 +48,8 @@ def hist_index_img(imgp, color_space, bin_size=8):
   bin_size_list = [bin_size,bin_size,bin_size]
 
   if color_space == 'rgb':
-#    rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    img_hist = cv2.calcHist([image],[0,1,2],None, bin_size_list, [0,256,0,256,0,256])
+    rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    img_hist = cv2.calcHist([rgb],[0,1,2],None, bin_size_list, [0,256,0,256,0,256])
   
   if color_space == 'hsv':
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
@@ -58,7 +58,7 @@ def hist_index_img(imgp, color_space, bin_size=8):
   norm_hist = cv2.normalize(img_hist, img_hist).flatten()
 #  print norm_hist, '\n'
   HIST_INDEX[imgp]=norm_hist
-  print str(imgp)
+#  print str(imgp)
 #  print(HIST_INDEX[imgp]), '\n'
   pass
 
@@ -107,35 +107,11 @@ def mass_build():
 
 
 if __name__ == '__main__':
-#  hist_index_img_dir(args['imgdir'], args['clr'], int(args['bin']))
-#  with open(args['hist'], 'wb') as histpick:
-#    pickle.dump(HIST_INDEX, histpick)
-#  print('indexing finished')
+  hist_index_img_dir(args['imgdir'], args['clr'], int(args['bin']))
+  with open(args['hist'], 'wb') as histpick:
+    pickle.dump(HIST_INDEX, histpick)
+  print('indexing finished')
 
-  mass_build()
-  print ('shit got done')
+#  mass_build()
+#  print ('shit got done')
 
-
-
-
-
-
-
-
-
-
-
-#  image = cv2.imread('car_test/img12.png')
-#  rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-#  cv2.imshow('rgb',rgb)
-#  cv2.imshow('bgr',image)
-
-#  fig1 = plt.figure(1)
-#  fig1.suptitle('Image')
-#  img_hist = cv2.calcHist([rgb],[0,1,2],None, [8,8,8], [0,256,0,256,0,256])
-#  plt.xlim([0,256])
-#  plt.xlabel('Bins')
-#  plt.ylabel('P')
-#  plt.subplot(311)
-#  plt.plot(img_hist, color='r')
-#  cv2.waitKey(0)

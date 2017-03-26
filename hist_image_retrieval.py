@@ -34,6 +34,7 @@ args = vars(ap.parse_args())
 inimg = cv2.imread(args['imgpath'])
 bin_size = int(args['bin'])
 # compute the histogram of inimg and save it in inhist
+inimg = cv2.cvtColor(inimg, cv2.COLOR_BGR2RGB)
 inhist = cv2.calcHist([inimg],[0,1,2], None, [bin_size,bin_size,bin_size],[0,256,0,256,0,256])
 # normalize and flatten the inhist into a feature vector
 inhist_vec = cv2.normalize(inhist,inhist).flatten()
@@ -46,29 +47,25 @@ HIST_INDEX = None
 def hist_correl_sim(norm_hist1, norm_hist2):
   # compute correlation similarity b/w normalized and flattened histograms
   return cv2.compareHist(norm_hist1, norm_hist2, cv2.HISTCMP_CORREL)
-  pass
 
 def hist_chisqr_sim(norm_hist1, norm_hist2):
   # compute chi square similarity b/w normalized and flattened histograms
   return cv2.compareHist(norm_hist1, norm_hist2, cv2.HISTCMP_CHISQR)
-  pass
 
 def hist_intersect_sim(norm_hist1, norm_hist2):
   # compute intersection similarity b/w normalized and flattened histograms
   return cv2.compareHist(norm_hist1, norm_hist2, cv2.HISTCMP_INTERSECT)
-  pass
 
 def hist_bhatta_sim(norm_hist1, norm_hist2):
   # compute bhattacharyya similarity b/w normalized and flattened histograms
   return cv2.compareHist(norm_hist1, norm_hist2, cv2.HISTCMP_BHATTACHARYYA)
-  pass
 
 # compute the topn matches using the value saved in hist_sim above.
 def compute_hist_sim(inhist_vec, hist_index, topn=3):
 
   if (args['clr']=='hsv'):
-    inimg = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    inhist = cv2.calcHist([inimg],[0,1,2], None, [bin_size,bin_size,bin_size],[0,256,0,256,0,256])
+    inimg = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
+    inhist = cv2.calcHist([inimg],[0,1,2], None, [bin_size,bin_size,bin_size],[0,180,0,256,0,256])
     inhist_vec = cv2.normalize(inhist,inhist).flatten()
 
   hist_sim_box = []
@@ -83,7 +80,14 @@ def compute_hist_sim(inhist_vec, hist_index, topn=3):
     if(args['sim']=='bhatta'):
       hist_sim_box.append([imgp,hist_bhatta_sim(inhist_vec, norm_hist)])
 
-  sorted(hist_sim_box, key=lambda x: x[1])
+  if(args['sim']=='correl'):
+    return sorted(hist_sim_box, key=lambda x: x[1],reverse=True)[:topn]
+  if(args['sim']=='chisqr'):
+    return sorted(hist_sim_box, key=lambda x: x[1])[:topn]
+  if(args['sim']=='inter'):
+    return sorted(hist_sim_box, key=lambda x: x[1],reverse=True)[:topn]
+  if(args['sim']=='bhatta'):
+    return sorted(hist_sim_box, key=lambda x: x[1])[:topn]
 
   return_list = []
 
@@ -92,10 +96,19 @@ def compute_hist_sim(inhist_vec, hist_index, topn=3):
   return return_list
 
 def show_images(input_image, match_list):
-  cv2.imshow('Input Image',input_image)                          
-  for x in match_list:
-    cv2.imshow(str(x[1]), x[0])
-  cv2.waitKey(0)
+  fig_base = plt.figure(1)
+  fig_base.suptitle("Input")
+  plt.imshow(input_image)
+
+  holding = 2
+  for impath, sim in match_list:
+    img = cv2.imread(impath)
+    fig = plt.figure(holding)
+    fig.suptitle('Match: '+str(holding-1)+str(impath)+' : '+str(sim))
+    plt.imshow(img)
+    holding += 1
+  plt.show()
+  cv2.waitKey(0) 
 
   pass
  
