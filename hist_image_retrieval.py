@@ -28,7 +28,7 @@ ap.add_argument('-ip', '--imgpath', required = True, help = 'image path')
 ap.add_argument('-hist', '--hist', required = True, help = 'hist index file')
 ap.add_argument('-bin', '--bin', required = True, help = 'hist bin size')
 ap.add_argument('-sim', '--sim', required = True, help = 'hist similarity')
-#ap.add_argument('-clr', '--clr', required = True, help = 'color space')
+ap.add_argument('-clr', '--clr', required = False, help = 'color space')
 args = vars(ap.parse_args())
 
 inimg = cv2.imread(args['imgpath'])
@@ -65,11 +65,38 @@ def hist_bhatta_sim(norm_hist1, norm_hist2):
 
 # compute the topn matches using the value saved in hist_sim above.
 def compute_hist_sim(inhist_vec, hist_index, topn=3):
-  # your code
-  pass
+
+  if (args['clr']=='hsv'):
+    inimg = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    inhist = cv2.calcHist([inimg],[0,1,2], None, [bin_size,bin_size,bin_size],[0,256,0,256,0,256]
+    inhist_vec = cv2.normalize(inhist,inhist).flatten()
+
+  hist_sim_box = []
+
+  if(args['sim']=='correl'):
+    for imgp, norm_hist in hist_index
+      hist_sim_box.append([imgp, hist_correl_sim(inhist_vec, norm_hist)])
+  if(args['sim']=='chisqr'):
+    for imgp, norm_hist in hist_index
+      hist_sim_box.append([imgp,hist_chisqr_sim(inhist_vec, norm_hist)])
+  if(args['sim']=='inter'):
+    for imgp, norm_hist in hist_index
+      hist_sim_box.append([imgp,hist_intersect_sim(inhist_vec, norm_hist)])
+  if(args['sim']=='bhatta'):
+    for imgp, norm_hist in hist_index
+      hist_sim_box.append([imgp,hist_bhatta_sim(inhist_vec, norm_hist)])
+
+  sorted(hist_sim_box, key=lambda x: x[1])
+
+  return_list = []
+
+  for x in xrange(topn):
+    return_list.append(hist_sim_box[x]
+  return return_list
 
 def show_images(input_image, match_list):
-  # show 4 images in matplotlib figures
+  
+
   pass
  
 if __name__ == '__main__':
